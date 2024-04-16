@@ -1,4 +1,5 @@
 import 'dart:collection';
+
 import 'package:units_converter/models/conversion_node.dart';
 import 'package:units_converter/models/property.dart';
 import 'package:units_converter/models/unit.dart';
@@ -63,8 +64,7 @@ abstract class DoubleProperty<T> extends Property<T, double> {
     _mapUnits = {for (var node in _nodeList) node.name: node};
     size = _nodeList.length;
     for (var conversionNode in _nodeList) {
-      _unitList.add(
-          Unit(conversionNode.name, symbol: mapSymbols?[conversionNode.name]));
+      _unitList.add(Unit(conversionNode.name, symbol: mapSymbols?[conversionNode.name]));
     }
   }
 
@@ -86,11 +86,35 @@ abstract class DoubleProperty<T> extends Property<T, double> {
     // Start the conversion
     _mapUnits[name]!.convert(value);
     for (var i = 0; i < size; i++) {
-      _unitList[i].value =
-          _nodeList.singleWhere((node) => node.name == _unitList[i].name).value;
-      _unitList[i].stringValue = valueToString(_unitList[i].value!,
-          significantFigures, removeTrailingZeros, useScientificNotation);
+      _unitList[i].value = _nodeList.singleWhere((node) => node.name == _unitList[i].name).value;
+      _unitList[i].stringValue =
+          valueToString(_unitList[i].value!, significantFigures, removeTrailingZeros, useScientificNotation);
     }
+  }
+
+  String generateFormula(dynamic name) {
+    final node = _nodeList.firstWhere((e) => e.name == name);
+    final symbol = getUnit(node.name).symbol;
+    if (node.parent == null) {
+      return "1 $symbol = 1 $symbol";
+    }
+    var coeffFormula = "";
+    var sumFormula = "";
+    if (node.conversionType == ConversionType.linearConversion) {
+      if (node.coefficientProduct != 1.0) {
+        coeffFormula = " * ${node.coefficientProduct}";
+      }
+    } else {
+      if (node.coefficientProduct != 1.0) {
+        coeffFormula = " / ${node.coefficientProduct}";
+      }
+    }
+    if (node.coefficientSum != 0.0) {
+      sumFormula = " + ${node.coefficientSum}";
+      coeffFormula = "($coeffFormula)";
+    }
+
+    return "1 $symbol = 1 ${getUnit(node.parent!.name).symbol}$coeffFormula$sumFormula";
   }
 
   ///Returns all the units converted with prefixes
@@ -99,8 +123,7 @@ abstract class DoubleProperty<T> extends Property<T, double> {
 
   ///Returns the Unit with the corresponding name
   @override
-  Unit getUnit(T name) =>
-      _unitList.where((element) => element.name == name).single;
+  Unit getUnit(T name) => _unitList.where((element) => element.name == name).single;
 
   /// Get the a list of the nodes from the conversionTree
   List<ConversionNode<T>> _getTreeAsList() {
