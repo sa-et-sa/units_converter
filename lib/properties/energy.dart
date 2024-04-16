@@ -12,6 +12,7 @@ enum ENERGY {
   kilowattHours,
   electronvolts,
   energyFootPound,
+  btu,
 }
 
 class Energy extends DoubleProperty<ENERGY> {
@@ -21,11 +22,7 @@ class Energy extends DoubleProperty<ENERGY> {
   ///energy.convert(Unit(ENERGY.joules, value: 1));
   ///print(ENERGY.kilowatt_hours);
   /// ```
-  Energy(
-      {super.significantFigures,
-      super.removeTrailingZeros,
-      super.useScientificNotation,
-      name})
+  Energy({super.significantFigures, super.removeTrailingZeros, super.useScientificNotation, name})
       : super(
             name: name ?? PROPERTY.energy,
             mapSymbols: {
@@ -36,6 +33,7 @@ class Energy extends DoubleProperty<ENERGY> {
               ENERGY.kilowattHours: 'kwh',
               ENERGY.electronvolts: 'eV',
               ENERGY.energyFootPound: 'ft⋅lbf',
+              ENERGY.btu: 'BTU',
             },
             conversionTree: ConversionNode(name: ENERGY.joules, children: [
               ConversionNode(
@@ -53,9 +51,9 @@ class Energy extends DoubleProperty<ENERGY> {
                 ],
               ),
               ConversionNode(
-                coefficientProduct: 3600000.0,
-                name: ENERGY.kilowattHours,
-              ),
+                  coefficientProduct: 3600000.0,
+                  name: ENERGY.kilowattHours,
+                  children: [ConversionNode(name: ENERGY.btu, coefficientProduct: 3412.14163)]),
               ConversionNode(
                 coefficientProduct: 1.60217646e-19,
                 name: ENERGY.electronvolts,
@@ -66,11 +64,12 @@ class Energy extends DoubleProperty<ENERGY> {
               ),
             ]));
 
-  Unit get joules => getUnit(ENERGY.joules);
-  Unit get kilojoules => getUnit(ENERGY.kilojoules);
+  Unit get btu => getUnit(ENERGY.btu);
   Unit get calories => getUnit(ENERGY.calories);
-  Unit get kilocalories => getUnit(ENERGY.kilocalories);
-  Unit get kilowattHours => getUnit(ENERGY.kilowattHours);
   Unit get electronvolts => getUnit(ENERGY.electronvolts);
   Unit get energyFootPound => getUnit(ENERGY.energyFootPound);
+  Unit get joules => getUnit(ENERGY.joules);
+  Unit get kilocalories => getUnit(ENERGY.kilocalories);
+  Unit get kilojoules => getUnit(ENERGY.kilojoules);
+  Unit get kilowattHours => getUnit(ENERGY.kilowattHours);
 }

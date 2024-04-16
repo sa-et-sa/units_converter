@@ -12,6 +12,8 @@ enum POWER {
   gigawatt,
   europeanHorsePower,
   imperialHorsePower,
+  btuPerHour,
+  btuPerMinute
 }
 
 class Power extends DoubleProperty<POWER> {
@@ -21,11 +23,7 @@ class Power extends DoubleProperty<POWER> {
   ///power.convert(Unit(POWER.kilowatt, value: 1));
   ///print(POWER.european_horse_power);
   /// ```
-  Power(
-      {super.significantFigures,
-      super.removeTrailingZeros,
-      super.useScientificNotation,
-      name})
+  Power({super.significantFigures, super.removeTrailingZeros, super.useScientificNotation, name})
       : super(
           name: name ?? PROPERTY.power,
           mapSymbols: {
@@ -36,6 +34,8 @@ class Power extends DoubleProperty<POWER> {
             POWER.gigawatt: 'GW',
             POWER.europeanHorsePower: 'hp(M)',
             POWER.imperialHorsePower: 'hp(I)',
+            POWER.btuPerHour: 'BTU/h',
+            POWER.btuPerMinute: 'BTU/min',
           },
           conversionTree: ConversionNode(name: POWER.watt, children: [
             ConversionNode(
@@ -62,14 +62,24 @@ class Power extends DoubleProperty<POWER> {
               coefficientProduct: 745.69987158,
               name: POWER.imperialHorsePower,
             ),
+            ConversionNode(
+              coefficientProduct: 3.415179,
+              name: POWER.btuPerHour,
+            ),
+            ConversionNode(
+              coefficientProduct: 3.415179 / 60,
+              name: POWER.btuPerMinute,
+            ),
           ]),
         );
 
-  Unit get watt => getUnit(POWER.watt);
-  Unit get milliwatt => getUnit(POWER.milliwatt);
+  Unit get btuPerHour => getUnit(POWER.btuPerHour);
+  Unit get btuPerMinute => getUnit(POWER.btuPerMinute);
+  Unit get europeanHorsePower => getUnit(POWER.europeanHorsePower);
+  Unit get gigawatt => getUnit(POWER.gigawatt);
+  Unit get imperialHorsePower => getUnit(POWER.imperialHorsePower);
   Unit get kilowatt => getUnit(POWER.kilowatt);
   Unit get megawatt => getUnit(POWER.megawatt);
-  Unit get gigawatt => getUnit(POWER.gigawatt);
-  Unit get europeanHorsePower => getUnit(POWER.europeanHorsePower);
-  Unit get imperialHorsePower => getUnit(POWER.imperialHorsePower);
+  Unit get milliwatt => getUnit(POWER.milliwatt);
+  Unit get watt => getUnit(POWER.watt);
 }

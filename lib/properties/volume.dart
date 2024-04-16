@@ -18,6 +18,7 @@ enum VOLUME {
   cups,
   cubicCentimeters,
   cubicFeet,
+  cubicYards,
   cubicInches,
   cubicMillimeters,
   imperialFluidOunces,
@@ -31,6 +32,7 @@ enum VOLUME {
   microliters,
   deciliters,
   centiliters,
+  corde,
 }
 
 class Volume extends DoubleProperty<VOLUME> {
@@ -40,11 +42,7 @@ class Volume extends DoubleProperty<VOLUME> {
   ///volume.convert(Unit(VOLUME.liters, value: 1));
   ///print(VOLUME.us_gallons);
   /// ```
-  Volume(
-      {super.significantFigures,
-      super.removeTrailingZeros,
-      super.useScientificNotation,
-      name})
+  Volume({super.significantFigures, super.removeTrailingZeros, super.useScientificNotation, name})
       : super(
           name: name ?? PROPERTY.volume,
           mapSymbols: {
@@ -60,6 +58,7 @@ class Volume extends DoubleProperty<VOLUME> {
             VOLUME.australianTablespoons: 'tbsp.',
             VOLUME.cups: 'cup',
             VOLUME.cubicCentimeters: 'cm³',
+            VOLUME.cubicYards: 'yd³',
             VOLUME.cubicFeet: 'ft³',
             VOLUME.cubicInches: 'in³',
             VOLUME.cubicMillimeters: 'mm³',
@@ -74,145 +73,143 @@ class Volume extends DoubleProperty<VOLUME> {
             VOLUME.microliters: 'µl',
             VOLUME.deciliters: 'dl',
             VOLUME.centiliters: 'cl',
+            VOLUME.corde: 'corde',
           },
           conversionTree: ConversionNode(name: VOLUME.cubicMeters, children: [
-            ConversionNode(
-                coefficientProduct: 1e-3,
-                name: VOLUME.liters,
+            ConversionNode(coefficientProduct: 1e-3, name: VOLUME.liters, children: [
+              ConversionNode(
+                coefficientProduct: 4.54609,
+                name: VOLUME.imperialGallons,
+              ),
+              ConversionNode(
+                coefficientProduct: 3.785411784,
+                name: VOLUME.usGallons,
+              ),
+              ConversionNode(
+                coefficientProduct: 0.56826125,
+                name: VOLUME.imperialPints,
                 children: [
                   ConversionNode(
-                    coefficientProduct: 4.54609,
-                    name: VOLUME.imperialGallons,
+                    coefficientProduct: 2,
+                    name: VOLUME.imperialQuarts,
                   ),
                   ConversionNode(
-                    coefficientProduct: 3.785411784,
-                    name: VOLUME.usGallons,
+                    coefficientProduct: 1 / 20,
+                    name: VOLUME.imperialFluidOunces,
+                    children: [
+                      ConversionNode(coefficientProduct: 5, name: VOLUME.imperialGill),
+                    ],
                   ),
+                ],
+              ),
+              ConversionNode(
+                coefficientProduct: 0.473176473,
+                name: VOLUME.usPints,
+                children: [
                   ConversionNode(
-                    coefficientProduct: 0.56826125,
-                    name: VOLUME.imperialPints,
+                    coefficientProduct: 1 / 16,
+                    name: VOLUME.usFluidOunces,
                     children: [
                       ConversionNode(
-                        coefficientProduct: 2,
-                        name: VOLUME.imperialQuarts,
-                      ),
-                      ConversionNode(
-                        coefficientProduct: 1 / 20,
-                        name: VOLUME.imperialFluidOunces,
-                        children: [
-                          ConversionNode(
-                              coefficientProduct: 5, name: VOLUME.imperialGill),
-                        ],
+                        coefficientProduct: 4,
+                        name: VOLUME.usGill,
                       ),
                     ],
                   ),
                   ConversionNode(
-                    coefficientProduct: 0.473176473,
-                    name: VOLUME.usPints,
-                    children: [
-                      ConversionNode(
-                        coefficientProduct: 1 / 16,
-                        name: VOLUME.usFluidOunces,
-                        children: [
-                          ConversionNode(
-                            coefficientProduct: 4,
-                            name: VOLUME.usGill,
-                          ),
-                        ],
-                      ),
-                      ConversionNode(
-                        coefficientProduct: 2,
-                        name: VOLUME.usQuarts,
-                      )
-                    ],
-                  ),
-                  ConversionNode(
-                      coefficientProduct: 1e-3,
-                      name: VOLUME.milliliters,
-                      children: [
-                        ConversionNode(
-                          coefficientProduct: 14.8,
-                          name: VOLUME.tablespoonsUs,
-                        ),
-                        ConversionNode(
-                          coefficientProduct: 20.0,
-                          name: VOLUME.australianTablespoons,
-                        ),
-                        ConversionNode(
-                          coefficientProduct: 240.0,
-                          name: VOLUME.cups,
-                        ),
-                      ]),
-                  ConversionNode(
-                    coefficientProduct: 0.1,
-                    name: VOLUME.deciliters,
-                  ),
-                  ConversionNode(
-                    coefficientProduct: 0.01,
-                    name: VOLUME.centiliters,
-                  ),
-                  ConversionNode(
-                    coefficientProduct: 1e-6,
-                    name: VOLUME.microliters,
-                  ),
-                  ConversionNode(
-                    coefficientProduct: 1e-9,
-                    name: VOLUME.nanoliters,
-                  ),
-                  ConversionNode(
-                    coefficientProduct: 1e-12,
-                    name: VOLUME.picoliters,
-                  ),
-                  ConversionNode(
-                    coefficientProduct: 1e-15,
-                    name: VOLUME.femtoliters,
-                  ),
-                ]),
-            ConversionNode(
+                    coefficientProduct: 2,
+                    name: VOLUME.usQuarts,
+                  )
+                ],
+              ),
+              ConversionNode(coefficientProduct: 1e-3, name: VOLUME.milliliters, children: [
+                ConversionNode(
+                  coefficientProduct: 14.8,
+                  name: VOLUME.tablespoonsUs,
+                ),
+                ConversionNode(
+                  coefficientProduct: 20.0,
+                  name: VOLUME.australianTablespoons,
+                ),
+                ConversionNode(
+                  coefficientProduct: 240.0,
+                  name: VOLUME.cups,
+                ),
+              ]),
+              ConversionNode(
+                coefficientProduct: 0.1,
+                name: VOLUME.deciliters,
+              ),
+              ConversionNode(
+                coefficientProduct: 0.01,
+                name: VOLUME.centiliters,
+              ),
+              ConversionNode(
                 coefficientProduct: 1e-6,
-                name: VOLUME.cubicCentimeters,
-                children: [
-                  ConversionNode(
-                      coefficientProduct: 16.387064,
-                      name: VOLUME.cubicInches,
-                      children: [
-                        ConversionNode(
-                          coefficientProduct: 1728.0,
-                          name: VOLUME.cubicFeet,
-                        ),
-                      ]),
-                ]),
+                name: VOLUME.microliters,
+              ),
+              ConversionNode(
+                coefficientProduct: 1e-9,
+                name: VOLUME.nanoliters,
+              ),
+              ConversionNode(
+                coefficientProduct: 1e-12,
+                name: VOLUME.picoliters,
+              ),
+              ConversionNode(
+                coefficientProduct: 1e-15,
+                name: VOLUME.femtoliters,
+              ),
+            ]),
+            ConversionNode(coefficientProduct: 1e-6, name: VOLUME.cubicCentimeters, children: [
+              ConversionNode(coefficientProduct: 16.387064, name: VOLUME.cubicInches, children: [
+                ConversionNode(
+                  coefficientProduct: 1728.0,
+                  name: VOLUME.cubicFeet,
+                ),
+                ConversionNode(
+                  coefficientProduct: 46656,
+                  name: VOLUME.cubicYards,
+                ),
+              ]),
+            ]),
             ConversionNode(
               coefficientProduct: 1e-9,
               name: VOLUME.cubicMillimeters,
             ),
+            ConversionNode(
+              coefficientProduct: 3.6245563,
+              name: VOLUME.corde,
+            ),
           ]),
         );
 
-  Unit get cubicMeters => getUnit(VOLUME.cubicMeters);
-  Unit get liters => getUnit(VOLUME.liters);
-  Unit get imperialGallons => getUnit(VOLUME.imperialGallons);
-  Unit get usGallons => getUnit(VOLUME.usGallons);
-  Unit get imperialPints => getUnit(VOLUME.imperialPints);
-  Unit get imperialQuarts => getUnit(VOLUME.imperialQuarts);
-  Unit get usPints => getUnit(VOLUME.usPints);
-  Unit get milliliters => getUnit(VOLUME.milliliters);
-  Unit get tablespoonsUs => getUnit(VOLUME.tablespoonsUs);
   Unit get australianTablespoons => getUnit(VOLUME.australianTablespoons);
-  Unit get cups => getUnit(VOLUME.cups);
+  Unit get centiliter => getUnit(VOLUME.centiliters);
+  Unit get corde => getUnit(VOLUME.corde);
   Unit get cubicCentimeters => getUnit(VOLUME.cubicCentimeters);
   Unit get cubicFeet => getUnit(VOLUME.cubicFeet);
   Unit get cubicInches => getUnit(VOLUME.cubicInches);
+  Unit get cubicMeters => getUnit(VOLUME.cubicMeters);
   Unit get cubicMillimeters => getUnit(VOLUME.cubicMillimeters);
-  Unit get imperialFluidOunces => getUnit(VOLUME.imperialFluidOunces);
-  Unit get usFluidOunces => getUnit(VOLUME.usFluidOunces);
-  Unit get imperialGill => getUnit(VOLUME.imperialGill);
-  Unit get usGill => getUnit(VOLUME.usGill);
-  Unit get usQuarts => getUnit(VOLUME.usQuarts);
-  Unit get femtoliter => getUnit(VOLUME.femtoliters);
-  Unit get picoliter => getUnit(VOLUME.picoliters);
-  Unit get nanoliter => getUnit(VOLUME.nanoliters);
-  Unit get microliter => getUnit(VOLUME.microliters);
+  Unit get cubicYards => getUnit(VOLUME.cubicYards);
+  Unit get cups => getUnit(VOLUME.cups);
   Unit get deciliter => getUnit(VOLUME.deciliters);
-  Unit get centiliter => getUnit(VOLUME.centiliters);
+  Unit get femtoliter => getUnit(VOLUME.femtoliters);
+  Unit get imperialFluidOunces => getUnit(VOLUME.imperialFluidOunces);
+  Unit get imperialGallons => getUnit(VOLUME.imperialGallons);
+  Unit get imperialGill => getUnit(VOLUME.imperialGill);
+  Unit get imperialPints => getUnit(VOLUME.imperialPints);
+  Unit get imperialQuarts => getUnit(VOLUME.imperialQuarts);
+  Unit get liters => getUnit(VOLUME.liters);
+  Unit get microliter => getUnit(VOLUME.microliters);
+  Unit get milliliters => getUnit(VOLUME.milliliters);
+  Unit get nanoliter => getUnit(VOLUME.nanoliters);
+  Unit get picoliter => getUnit(VOLUME.picoliters);
+  Unit get tablespoonsUs => getUnit(VOLUME.tablespoonsUs);
+  Unit get usFluidOunces => getUnit(VOLUME.usFluidOunces);
+  Unit get usGallons => getUnit(VOLUME.usGallons);
+  Unit get usGill => getUnit(VOLUME.usGill);
+  Unit get usPints => getUnit(VOLUME.usPints);
+  Unit get usQuarts => getUnit(VOLUME.usQuarts);
 }

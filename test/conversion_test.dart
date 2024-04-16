@@ -1,59 +1,6 @@
 import 'package:test/test.dart';
 import 'package:units_converter/units_converter.dart';
 
-/// This function defines if a value is acceptable. e.g. if we expect to have 1 but we get 1.00000000012, is this a valid result or not?
-/// The term sensibility is used improperly.
-bool isAcceptable(double? convertedValue, double? expectedValue, sensibility) {
-  if ((convertedValue == null && expectedValue != null) ||
-      (convertedValue != null && expectedValue == null)) {
-    return false;
-  }
-  final double accuracy = expectedValue! / sensibility;
-  final double upperConstraint = expectedValue + accuracy;
-  final double lowerConstraint = expectedValue - accuracy;
-  return convertedValue! >= lowerConstraint &&
-      convertedValue <= upperConstraint;
-}
-
-void runConversionTest(Map<dynamic, double> expectedResult, Property property,
-    {double sensibility = 1e10}) {
-  final List listNames = expectedResult.keys.toList();
-  for (var unitName in listNames) {
-    test('Test from ${unitName.toString()}', () {
-      property.convert(unitName, expectedResult[unitName]);
-      List<Unit> unitList = property.getAll();
-      for (Unit unit in unitList) {
-        var name = unit.name;
-        double? convertedValue =
-            unitList.where((element) => element.name == name).single.value;
-        expect(
-          isAcceptable(convertedValue, expectedResult[name]!, sensibility),
-          true,
-          reason:
-              'Error with ${name.toString()}. Expected: ${expectedResult[name]}, result: $convertedValue',
-        );
-      }
-    });
-  }
-  for (var unitName in listNames) {
-    test('Test from ${unitName.toString()}', () {
-      property.convert(unitName, null);
-      List<Unit> unitList = property.getAll();
-      for (Unit unit in unitList) {
-        var name = unit.name;
-        double? convertedValue =
-            unitList.where((element) => element.name == name).single.value;
-        expect(
-          convertedValue,
-          null,
-          reason:
-              'Error with ${name.toString()}. Expected: null, result: $convertedValue',
-        );
-      }
-    });
-  }
-}
-
 void main() {
   group('Angle conversion', () {
     const Map<ANGLE, double> expectedResult = {
@@ -79,6 +26,7 @@ void main() {
       AREA.hectares: 1e-4,
       AREA.acres: 0.00024710538146717,
       AREA.are: 0.01,
+      AREA.squareArpent: 0.00029198975739772466,
     };
     runConversionTest(expectedResult, Area());
   });
@@ -103,6 +51,11 @@ void main() {
       DENSITY.nanogramsPerMilliliter: 1e6,
       DENSITY.picogramsPerLiter: 1e12,
       DENSITY.picogramsPerMilliliter: 1e9,
+      DENSITY.poundsPerCubicInch: 0.00003612729200008368,
+      DENSITY.poundsPerCubicYard: 1.6855549355559043,
+      DENSITY.shortTonsPerCubicYard: 0.0008427774677779522,
+      DENSITY.poundsPerCubicFoot: 0.06242796057614461,
+      DENSITY.gramsPerCubicMeter: 1000,
     };
     runConversionTest(expectedResult, Density());
   });
@@ -140,6 +93,24 @@ void main() {
     runConversionTest(expectedResult, DigitalData());
   });
 
+  group('Flow', () {
+    const Map<FLOW, double> expectedResult = {
+      FLOW.litersPerSecond: 1,
+      FLOW.litersPerMinute: 0.016666666666666666,
+      FLOW.litersPerHour: 0.0002777777777777778,
+      FLOW.litersPerDay: 1.1574074074074074e-5,
+      FLOW.usGallonsPerSecond: 3.7854117840000003,
+      FLOW.usGallonsPerMinute: 0.0630901964,
+      FLOW.usGallonsPerHour: 0.0010515032733333335,
+      FLOW.usGallonsPerDay: 0.00004381263638888889,
+      FLOW.imperialGallonsPerSecond: 4.546091990207791,
+      FLOW.imperialGallonsPerMinute: 0.07576819983679652,
+      FLOW.imperialGallonsPerHour: 0.0012628033306132753,
+      FLOW.imperialGallonsPerDay: 0.0000526168054422198,
+    };
+    runConversionTest(expectedResult, Flow());
+  });
+
   group('Energy', () {
     const Map<ENERGY, double> expectedResult = {
       ENERGY.joules: 1,
@@ -149,6 +120,7 @@ void main() {
       ENERGY.kilowattHours: 2.7777777778e-7,
       ENERGY.electronvolts: 6.2415097523028e18,
       ENERGY.energyFootPound: 0.7375621493,
+      ENERGY.btu: 8.14086306780231e-11,
     };
     runConversionTest(expectedResult, Energy());
   });
@@ -202,6 +174,8 @@ void main() {
       LENGTH.lightYears: 1.057000451015e-16,
       LENGTH.parsec: 3.2423326718251e-17,
       LENGTH.mils: 39370.0787401574803,
+      LENGTH.arpents: 0.01710240458098168,
+      LENGTH.chains: 0.049701789264413515,
     };
     runConversionTest(expectedResult, Length());
   });
@@ -227,6 +201,8 @@ void main() {
       MASS.nanograms: 1e9,
       MASS.micrograms: 1e6,
       MASS.decigrams: 10,
+      MASS.longtons: 9.8420652761106e-7,
+      MASS.shorttons: 1.1023113109244e-6,
     };
     runConversionTest(expectedResult, Mass(), sensibility: 1e9);
   });
@@ -287,15 +263,11 @@ void main() {
         List<Unit> unitList = property.getAll();
         for (Unit unit in unitList) {
           var name = unit.name;
-          String? convertedValue = unitList
-              .where((element) => element.name == name)
-              .single
-              .stringValue!;
+          String? convertedValue = unitList.where((element) => element.name == name).single.stringValue!;
           expect(
             convertedValue,
             expectedResult[name],
-            reason:
-                'Error with ${name.toString()}. Expected: ${expectedResult[name]}, result: $convertedValue',
+            reason: 'Error with ${name.toString()}. Expected: ${expectedResult[name]}, result: $convertedValue',
           );
         }
       });
@@ -307,15 +279,11 @@ void main() {
         List<Unit> unitList = property.getAll();
         for (Unit unit in unitList) {
           var name = unit.name;
-          String? convertedValue = unitList
-              .where((element) => element.name == name)
-              .single
-              .stringValue;
+          String? convertedValue = unitList.where((element) => element.name == name).single.stringValue;
           expect(
             convertedValue,
             null,
-            reason:
-                'Error with ${name.toString()}. Expected: null, result: $convertedValue',
+            reason: 'Error with ${name.toString()}. Expected: null, result: $convertedValue',
           );
         }
       });
@@ -331,6 +299,8 @@ void main() {
       POWER.gigawatt: 1e-9,
       POWER.europeanHorsePower: 0.0013596216173039,
       POWER.imperialHorsePower: 0.0013410220895991,
+      POWER.btuPerHour: 0.2928104207715027,
+      POWER.btuPerMinute: 17.568625246290164,
     };
     runConversionTest(expectedResult, Power());
   });
@@ -498,6 +468,8 @@ void main() {
       VOLUME.microliters: 1e9,
       VOLUME.deciliters: 1e4,
       VOLUME.centiliters: 1e5,
+      VOLUME.cubicYards: 1.3079506193144,
+      VOLUME.corde: 0.27589583861616385,
     };
     runConversionTest(expectedResult, Volume(), sensibility: 1e9);
   });
@@ -531,8 +503,7 @@ void main() {
       'USD': '\$',
       'GBP': '£',
     };
-    runConversionTest(expectedResult,
-        SimpleCustomProperty(expectedResult, mapSymbols: mapSymbol));
+    runConversionTest(expectedResult, SimpleCustomProperty(expectedResult, mapSymbols: mapSymbol));
     // We use it with null symbols
     var conversion = SimpleCustomProperty(expectedResult)..convert('EUR', 1);
     // test single units
@@ -546,4 +517,50 @@ void main() {
       );
     });
   });
+}
+
+/// This function defines if a value is acceptable. e.g. if we expect to have 1 but we get 1.00000000012, is this a valid result or not?
+/// The term sensibility is used improperly.
+bool isAcceptable(double? convertedValue, double? expectedValue, sensibility) {
+  if ((convertedValue == null && expectedValue != null) || (convertedValue != null && expectedValue == null)) {
+    return false;
+  }
+  final double accuracy = expectedValue! / sensibility;
+  final double upperConstraint = expectedValue + accuracy;
+  final double lowerConstraint = expectedValue - accuracy;
+  return convertedValue! >= lowerConstraint && convertedValue <= upperConstraint;
+}
+
+void runConversionTest(Map<dynamic, double> expectedResult, Property property, {double sensibility = 1e10}) {
+  final List listNames = expectedResult.keys.toList();
+  for (var unitName in listNames) {
+    test('Test from ${unitName.toString()}', () {
+      property.convert(unitName, expectedResult[unitName]);
+      List<Unit> unitList = property.getAll();
+      for (Unit unit in unitList) {
+        var name = unit.name;
+        double? convertedValue = unitList.where((element) => element.name == name).single.value;
+        expect(
+          isAcceptable(convertedValue, expectedResult[name]!, sensibility),
+          true,
+          reason: 'Error with ${name.toString()}. Expected: ${expectedResult[name]}, result: $convertedValue',
+        );
+      }
+    });
+  }
+  for (var unitName in listNames) {
+    test('Test from ${unitName.toString()}', () {
+      property.convert(unitName, null);
+      List<Unit> unitList = property.getAll();
+      for (Unit unit in unitList) {
+        var name = unit.name;
+        double? convertedValue = unitList.where((element) => element.name == name).single.value;
+        expect(
+          convertedValue,
+          null,
+          reason: 'Error with ${name.toString()}. Expected: null, result: $convertedValue',
+        );
+      }
+    });
+  }
 }

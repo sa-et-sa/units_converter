@@ -25,6 +25,7 @@ enum PROPERTY {
   time,
   torque,
   volume,
+  flow,
 }
 
 abstract class Property<K, V> {

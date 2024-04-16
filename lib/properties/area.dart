@@ -11,6 +11,7 @@ enum AREA {
   squareFeet,
   squareFeetUs,
   squareMiles,
+  squareArpent,
   squareYard,
   squareMillimeters,
   squareKilometers,
@@ -27,11 +28,7 @@ class Area extends DoubleProperty<AREA> {
   ///area.convert(Unit(AREA.square_meters, value: 1));
   ///print(AREA.acres);
   /// ```
-  Area(
-      {super.significantFigures,
-      super.removeTrailingZeros,
-      super.useScientificNotation,
-      name})
+  Area({super.significantFigures, super.removeTrailingZeros, super.useScientificNotation, name})
       : super(
           name: name ?? PROPERTY.area,
           mapSymbols: {
@@ -47,26 +44,21 @@ class Area extends DoubleProperty<AREA> {
             AREA.hectares: 'ha',
             AREA.acres: 'ac',
             AREA.are: 'a',
+            AREA.squareArpent: 'arpent²',
           },
           conversionTree: ConversionNode(name: AREA.squareMeters, children: [
-            ConversionNode(
-                coefficientProduct: 1e-4,
-                name: AREA.squareCentimeters,
-                children: [
-                  ConversionNode(
-                      coefficientProduct: 6.4516,
-                      name: AREA.squareInches,
-                      children: [
-                        ConversionNode(
-                          coefficientProduct: 144.0,
-                          name: AREA.squareFeet,
-                        ),
-                        ConversionNode(
-                          coefficientProduct: 12.000024 * 12.000024,
-                          name: AREA.squareFeetUs,
-                        ),
-                      ]),
-                ]),
+            ConversionNode(coefficientProduct: 1e-4, name: AREA.squareCentimeters, children: [
+              ConversionNode(coefficientProduct: 6.4516, name: AREA.squareInches, children: [
+                ConversionNode(
+                  coefficientProduct: 144.0,
+                  name: AREA.squareFeet,
+                ),
+                ConversionNode(
+                  coefficientProduct: 12.000024 * 12.000024,
+                  name: AREA.squareFeetUs,
+                ),
+              ]),
+            ]),
             ConversionNode(
               coefficientProduct: 1e-6,
               name: AREA.squareMillimeters,
@@ -91,6 +83,10 @@ class Area extends DoubleProperty<AREA> {
                   coefficientProduct: 4840.0,
                   name: AREA.acres,
                 ),
+                ConversionNode(
+                  name: AREA.squareArpent,
+                  coefficientProduct: 4096,
+                )
               ],
             ),
             ConversionNode(
@@ -100,16 +96,17 @@ class Area extends DoubleProperty<AREA> {
           ]),
         );
 
-  Unit get squareMeters => getUnit(AREA.squareMeters);
-  Unit get squareCentimeters => getUnit(AREA.squareCentimeters);
-  Unit get squareInches => getUnit(AREA.squareInches);
-  Unit get squareFeet => getUnit(AREA.squareFeet);
-  Unit get squareFeetUs => getUnit(AREA.squareFeetUs);
-  Unit get squareMiles => getUnit(AREA.squareMiles);
-  Unit get squareYard => getUnit(AREA.squareYard);
-  Unit get squareMillimeters => getUnit(AREA.squareMillimeters);
-  Unit get squareKilometers => getUnit(AREA.squareKilometers);
-  Unit get hectares => getUnit(AREA.hectares);
   Unit get acres => getUnit(AREA.acres);
   Unit get are => getUnit(AREA.are);
+  Unit get hectares => getUnit(AREA.hectares);
+  Unit get squareArpent => getUnit(AREA.squareArpent);
+  Unit get squareCentimeters => getUnit(AREA.squareCentimeters);
+  Unit get squareFeet => getUnit(AREA.squareFeet);
+  Unit get squareFeetUs => getUnit(AREA.squareFeetUs);
+  Unit get squareInches => getUnit(AREA.squareInches);
+  Unit get squareKilometers => getUnit(AREA.squareKilometers);
+  Unit get squareMeters => getUnit(AREA.squareMeters);
+  Unit get squareMiles => getUnit(AREA.squareMiles);
+  Unit get squareMillimeters => getUnit(AREA.squareMillimeters);
+  Unit get squareYard => getUnit(AREA.squareYard);
 }

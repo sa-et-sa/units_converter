@@ -10,6 +10,8 @@ enum MASS {
   kilograms,
   pounds,
   ounces,
+  longtons,
+  shorttons,
   quintals,
   tons,
   milligrams,
@@ -35,11 +37,7 @@ class Mass extends DoubleProperty<MASS> {
   ///mass.convert(Unit(MASS.grams, value: 1));
   ///print(MASS.ounces);
   /// ```
-  Mass(
-      {super.significantFigures,
-      super.removeTrailingZeros,
-      super.useScientificNotation,
-      name})
+  Mass({super.significantFigures, super.removeTrailingZeros, super.useScientificNotation, name})
       : super(
           name: name ?? PROPERTY.mass,
           mapSymbols: {
@@ -61,6 +59,8 @@ class Mass extends DoubleProperty<MASS> {
             MASS.nanograms: 'ng',
             MASS.micrograms: 'µg',
             MASS.decigrams: 'dg',
+            MASS.longtons: 'LT',
+            MASS.shorttons: 'tn',
           },
           conversionTree: ConversionNode(name: MASS.grams, children: [
             ConversionNode(
@@ -78,6 +78,14 @@ class Mass extends DoubleProperty<MASS> {
                     ConversionNode(
                       coefficientProduct: 1 / 16,
                       name: MASS.ounces,
+                    ),
+                    ConversionNode(
+                      coefficientProduct: 2240,
+                      name: MASS.longtons,
+                    ),
+                    ConversionNode(
+                      coefficientProduct: 2000,
+                      name: MASS.shorttons,
                     ),
                     ConversionNode(
                       coefficientProduct: 14,
@@ -111,15 +119,12 @@ class Mass extends DoubleProperty<MASS> {
               coefficientProduct: 0.2,
               name: MASS.carats,
             ),
-            ConversionNode(
-                coefficientProduct: 1.55517384,
-                name: MASS.pennyweights,
-                children: [
-                  ConversionNode(
-                    coefficientProduct: 20,
-                    name: MASS.troyOunces,
-                  ),
-                ]),
+            ConversionNode(coefficientProduct: 1.55517384, name: MASS.pennyweights, children: [
+              ConversionNode(
+                coefficientProduct: 20,
+                name: MASS.troyOunces,
+              ),
+            ]),
             ConversionNode(
               coefficientProduct: 1e-15,
               name: MASS.femtograms,
@@ -143,23 +148,25 @@ class Mass extends DoubleProperty<MASS> {
           ]),
         );
 
-  Unit get grams => getUnit(MASS.grams);
-  Unit get ettograms => getUnit(MASS.ettograms);
-  Unit get kilograms => getUnit(MASS.kilograms);
-  Unit get pounds => getUnit(MASS.pounds);
-  Unit get ounces => getUnit(MASS.ounces);
-  Unit get quintals => getUnit(MASS.quintals);
-  Unit get tons => getUnit(MASS.tons);
-  Unit get milligrams => getUnit(MASS.milligrams);
-  Unit get uma => getUnit(MASS.uma);
   Unit get carats => getUnit(MASS.carats);
   Unit get centigrams => getUnit(MASS.centigrams);
-  Unit get pennyweights => getUnit(MASS.pennyweights);
-  Unit get troyOunces => getUnit(MASS.troyOunces);
-  Unit get stones => getUnit(MASS.stones);
-  Unit get femtograms => getUnit(MASS.femtograms);
-  Unit get picograms => getUnit(MASS.picograms);
-  Unit get nanograms => getUnit(MASS.nanograms);
-  Unit get micrograms => getUnit(MASS.micrograms);
   Unit get decigrams => getUnit(MASS.decigrams);
+  Unit get ettograms => getUnit(MASS.ettograms);
+  Unit get femtograms => getUnit(MASS.femtograms);
+  Unit get grams => getUnit(MASS.grams);
+  Unit get kilograms => getUnit(MASS.kilograms);
+  Unit get longtons => getUnit(MASS.longtons);
+  Unit get micrograms => getUnit(MASS.micrograms);
+  Unit get milligrams => getUnit(MASS.milligrams);
+  Unit get nanograms => getUnit(MASS.nanograms);
+  Unit get ounces => getUnit(MASS.ounces);
+  Unit get pennyweights => getUnit(MASS.pennyweights);
+  Unit get picograms => getUnit(MASS.picograms);
+  Unit get pounds => getUnit(MASS.pounds);
+  Unit get quintals => getUnit(MASS.quintals);
+  Unit get shorttons => getUnit(MASS.shorttons);
+  Unit get stones => getUnit(MASS.stones);
+  Unit get tons => getUnit(MASS.tons);
+  Unit get troyOunces => getUnit(MASS.troyOunces);
+  Unit get uma => getUnit(MASS.uma);
 }

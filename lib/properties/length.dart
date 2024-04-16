@@ -23,6 +23,8 @@ enum LENGTH {
   lightYears,
   parsec,
   mils,
+  chains,
+  arpents, // québec
 }
 
 class Length extends DoubleProperty<LENGTH> {
@@ -32,11 +34,7 @@ class Length extends DoubleProperty<LENGTH> {
   ///length.convert(Unit(LENGTH.meters, value: 1));
   ///print(length.inches);
   /// ```
-  Length(
-      {super.significantFigures,
-      super.removeTrailingZeros,
-      super.useScientificNotation,
-      name})
+  Length({super.significantFigures, super.removeTrailingZeros, super.useScientificNotation, name})
       : super(
             name: name ?? PROPERTY.length,
             mapSymbols: {
@@ -58,43 +56,44 @@ class Length extends DoubleProperty<LENGTH> {
               LENGTH.lightYears: 'ly',
               LENGTH.parsec: 'pc',
               LENGTH.mils: 'th',
+              LENGTH.chains: 'ch',
+              LENGTH.arpents: 'arpent',
             },
             conversionTree: ConversionNode(name: LENGTH.meters, children: [
+              ConversionNode(coefficientProduct: 0.01, name: LENGTH.centimeters, children: [
+                ConversionNode(coefficientProduct: 2.54, name: LENGTH.inches, children: [
+                  ConversionNode(
+                    coefficientProduct: 12.0,
+                    name: LENGTH.feet,
+                  ),
+                  ConversionNode(
+                    coefficientProduct: 12.000024,
+                    name: LENGTH.feetUs,
+                  ),
+                  ConversionNode(
+                    coefficientProduct: 1e-3,
+                    name: LENGTH.mils,
+                  ),
+                ]),
+              ]),
               ConversionNode(
-                  coefficientProduct: 0.01,
-                  name: LENGTH.centimeters,
-                  children: [
-                    ConversionNode(
-                        coefficientProduct: 2.54,
-                        name: LENGTH.inches,
-                        children: [
-                          ConversionNode(
-                            coefficientProduct: 12.0,
-                            name: LENGTH.feet,
-                          ),
-                          ConversionNode(
-                            coefficientProduct: 12.000024,
-                            name: LENGTH.feetUs,
-                          ),
-                          ConversionNode(
-                            coefficientProduct: 1e-3,
-                            name: LENGTH.mils,
-                          ),
-                        ]),
-                  ]),
+                coefficientProduct: 20.12,
+                name: LENGTH.chains,
+              ),
+              ConversionNode(
+                coefficientProduct: 58.47131,
+                name: LENGTH.arpents,
+              ),
               ConversionNode(
                 coefficientProduct: 1852.0,
                 name: LENGTH.nauticalMiles,
               ),
-              ConversionNode(
-                  coefficientProduct: 0.9144,
-                  name: LENGTH.yards,
-                  children: [
-                    ConversionNode(
-                      coefficientProduct: 1760.0,
-                      name: LENGTH.miles,
-                    ),
-                  ]),
+              ConversionNode(coefficientProduct: 0.9144, name: LENGTH.yards, children: [
+                ConversionNode(
+                  coefficientProduct: 1760.0,
+                  name: LENGTH.miles,
+                ),
+              ]),
               ConversionNode(
                 coefficientProduct: 1e-3,
                 name: LENGTH.millimeters,
@@ -115,43 +114,36 @@ class Length extends DoubleProperty<LENGTH> {
                 coefficientProduct: 1e-12,
                 name: LENGTH.picometers,
               ),
-              ConversionNode(
-                  coefficientProduct: 1000.0,
-                  name: LENGTH.kilometers,
-                  children: [
+              ConversionNode(coefficientProduct: 1000.0, name: LENGTH.kilometers, children: [
+                ConversionNode(coefficientProduct: 149597870.7, name: LENGTH.astronomicalUnits, children: [
+                  ConversionNode(coefficientProduct: 63241.1, name: LENGTH.lightYears, children: [
                     ConversionNode(
-                        coefficientProduct: 149597870.7,
-                        name: LENGTH.astronomicalUnits,
-                        children: [
-                          ConversionNode(
-                              coefficientProduct: 63241.1,
-                              name: LENGTH.lightYears,
-                              children: [
-                                ConversionNode(
-                                  coefficientProduct: 3.26,
-                                  name: LENGTH.parsec,
-                                ),
-                              ]),
-                        ]),
+                      coefficientProduct: 3.26,
+                      name: LENGTH.parsec,
+                    ),
                   ]),
+                ]),
+              ]),
             ]));
 
-  Unit get meters => getUnit(LENGTH.meters);
+  Unit get angstroms => getUnit(LENGTH.angstroms);
+  Unit get arpents => getUnit(LENGTH.arpents);
+  Unit get astronomicalUnits => getUnit(LENGTH.astronomicalUnits);
   Unit get centimeters => getUnit(LENGTH.centimeters);
-  Unit get inches => getUnit(LENGTH.inches);
+  Unit get chains => getUnit(LENGTH.chains);
   Unit get feet => getUnit(LENGTH.feet);
   Unit get feetUs => getUnit(LENGTH.feetUs);
-  Unit get nauticalMiles => getUnit(LENGTH.nauticalMiles);
-  Unit get yards => getUnit(LENGTH.yards);
+  Unit get inches => getUnit(LENGTH.inches);
+  Unit get kilometers => getUnit(LENGTH.kilometers);
+  Unit get lightYears => getUnit(LENGTH.lightYears);
+  Unit get meters => getUnit(LENGTH.meters);
+  Unit get micrometers => getUnit(LENGTH.micrometers);
   Unit get miles => getUnit(LENGTH.miles);
   Unit get millimeters => getUnit(LENGTH.millimeters);
-  Unit get micrometers => getUnit(LENGTH.micrometers);
-  Unit get nanometers => getUnit(LENGTH.nanometers);
-  Unit get angstroms => getUnit(LENGTH.angstroms);
-  Unit get picometers => getUnit(LENGTH.picometers);
-  Unit get kilometers => getUnit(LENGTH.kilometers);
-  Unit get astronomicalUnits => getUnit(LENGTH.astronomicalUnits);
-  Unit get lightYears => getUnit(LENGTH.lightYears);
-  Unit get parsec => getUnit(LENGTH.parsec);
   Unit get mils => getUnit(LENGTH.mils);
+  Unit get nanometers => getUnit(LENGTH.nanometers);
+  Unit get nauticalMiles => getUnit(LENGTH.nauticalMiles);
+  Unit get parsec => getUnit(LENGTH.parsec);
+  Unit get picometers => getUnit(LENGTH.picometers);
+  Unit get yards => getUnit(LENGTH.yards);
 }
