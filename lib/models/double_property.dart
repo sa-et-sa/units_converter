@@ -115,12 +115,13 @@ abstract class DoubleProperty<T> extends Property<T, double> {
       } else {
         sumFormula = " ${node.coefficientSum}";
       }
-      if (coeffFormula.isNotEmpty) {
-        coeffFormula = "($coeffFormula)";
-      }
     }
 
-    return "1 $symbol = 1 ${getUnit(node.parent!.name).symbol}$coeffFormula$sumFormula";
+    if (coeffFormula.isNotEmpty && sumFormula.isNotEmpty) {
+      return "1 $symbol = (1 ${getUnit(node.parent!.name).symbol}$coeffFormula)$sumFormula";
+    } else {
+      return "1 $symbol = 1 ${getUnit(node.parent!.name).symbol}$coeffFormula$sumFormula";
+    }
   }
 
   ///Returns all the units converted with prefixes
