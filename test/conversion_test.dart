@@ -1,4 +1,5 @@
 import 'package:test/test.dart';
+import 'package:units_converter/properties/maple_products.dart';
 import 'package:units_converter/units_converter.dart';
 
 void main() {
@@ -180,6 +181,27 @@ void main() {
     runConversionTest(expectedResult, Length());
   });
 
+  group('Maple products', () {
+    const Map<MAPLE_PRODUCTS, double> expectedResult = {
+      MAPLE_PRODUCTS.imperialGallonsSyrup: 1,
+      MAPLE_PRODUCTS.lbsSyrup: 13.2476,
+      MAPLE_PRODUCTS.kilogramSyrup: 6.009,
+      MAPLE_PRODUCTS.lbsButter: 10.5,
+      MAPLE_PRODUCTS.kilogramButter: 4.8,
+      MAPLE_PRODUCTS.lbsSnowTaffy: 10.4,
+      MAPLE_PRODUCTS.kilogramSnowTaffy: 4.7,
+      MAPLE_PRODUCTS.lbsPotTaffySoftSugarSoftCandy: 10.2,
+      MAPLE_PRODUCTS.kilogramPotTaffySoftSugarSoftCandy: 4.6,
+      MAPLE_PRODUCTS.lbsHardSugar: 9.2,
+      MAPLE_PRODUCTS.kilogramHardSugar: 4.2,
+      MAPLE_PRODUCTS.lbsGranulatedSugar: 8.9,
+      MAPLE_PRODUCTS.kilogramGranulatedSugar: 4,
+      MAPLE_PRODUCTS.taffyAndOrButterCones: 180,
+      MAPLE_PRODUCTS.literSyrup: 4.54596,
+    };
+    runConversionTest(expectedResult, MapleProducts());
+  });
+
   group('Mass', () {
     const Map<MASS, double> expectedResult = {
       MASS.grams: 1,
@@ -263,11 +285,15 @@ void main() {
         List<Unit> unitList = property.getAll();
         for (Unit unit in unitList) {
           var name = unit.name;
-          String? convertedValue = unitList.where((element) => element.name == name).single.stringValue!;
+          String? convertedValue = unitList
+              .where((element) => element.name == name)
+              .single
+              .stringValue!;
           expect(
             convertedValue,
             expectedResult[name],
-            reason: 'Error with ${name.toString()}. Expected: ${expectedResult[name]}, result: $convertedValue',
+            reason:
+                'Error with ${name.toString()}. Expected: ${expectedResult[name]}, result: $convertedValue',
           );
         }
       });
@@ -279,11 +305,15 @@ void main() {
         List<Unit> unitList = property.getAll();
         for (Unit unit in unitList) {
           var name = unit.name;
-          String? convertedValue = unitList.where((element) => element.name == name).single.stringValue;
+          String? convertedValue = unitList
+              .where((element) => element.name == name)
+              .single
+              .stringValue;
           expect(
             convertedValue,
             null,
-            reason: 'Error with ${name.toString()}. Expected: null, result: $convertedValue',
+            reason:
+                'Error with ${name.toString()}. Expected: null, result: $convertedValue',
           );
         }
       });
@@ -503,7 +533,8 @@ void main() {
       'USD': '\$',
       'GBP': '£',
     };
-    runConversionTest(expectedResult, SimpleCustomProperty(expectedResult, mapSymbols: mapSymbol));
+    runConversionTest(expectedResult,
+        SimpleCustomProperty(expectedResult, mapSymbols: mapSymbol));
     // We use it with null symbols
     var conversion = SimpleCustomProperty(expectedResult)..convert('EUR', 1);
     // test single units
@@ -522,16 +553,19 @@ void main() {
 /// This function defines if a value is acceptable. e.g. if we expect to have 1 but we get 1.00000000012, is this a valid result or not?
 /// The term sensibility is used improperly.
 bool isAcceptable(double? convertedValue, double? expectedValue, sensibility) {
-  if ((convertedValue == null && expectedValue != null) || (convertedValue != null && expectedValue == null)) {
+  if ((convertedValue == null && expectedValue != null) ||
+      (convertedValue != null && expectedValue == null)) {
     return false;
   }
   final double accuracy = expectedValue! / sensibility;
   final double upperConstraint = expectedValue + accuracy;
   final double lowerConstraint = expectedValue - accuracy;
-  return convertedValue! >= lowerConstraint && convertedValue <= upperConstraint;
+  return convertedValue! >= lowerConstraint &&
+      convertedValue <= upperConstraint;
 }
 
-void runConversionTest(Map<dynamic, double> expectedResult, Property property, {double sensibility = 1e10}) {
+void runConversionTest(Map<dynamic, double> expectedResult, Property property,
+    {double sensibility = 1e10}) {
   final List listNames = expectedResult.keys.toList();
   for (var unitName in listNames) {
     test('Test from ${unitName.toString()}', () {
@@ -539,11 +573,13 @@ void runConversionTest(Map<dynamic, double> expectedResult, Property property, {
       List<Unit> unitList = property.getAll();
       for (Unit unit in unitList) {
         var name = unit.name;
-        double? convertedValue = unitList.where((element) => element.name == name).single.value;
+        double? convertedValue =
+            unitList.where((element) => element.name == name).single.value;
         expect(
           isAcceptable(convertedValue, expectedResult[name]!, sensibility),
           true,
-          reason: 'Error with ${name.toString()}. Expected: ${expectedResult[name]}, result: $convertedValue',
+          reason:
+              'Error with ${name.toString()}. Expected: ${expectedResult[name]}, result: $convertedValue',
         );
       }
     });
@@ -554,11 +590,13 @@ void runConversionTest(Map<dynamic, double> expectedResult, Property property, {
       List<Unit> unitList = property.getAll();
       for (Unit unit in unitList) {
         var name = unit.name;
-        double? convertedValue = unitList.where((element) => element.name == name).single.value;
+        double? convertedValue =
+            unitList.where((element) => element.name == name).single.value;
         expect(
           convertedValue,
           null,
-          reason: 'Error with ${name.toString()}. Expected: null, result: $convertedValue',
+          reason:
+              'Error with ${name.toString()}. Expected: null, result: $convertedValue',
         );
       }
     });

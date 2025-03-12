@@ -1,4 +1,5 @@
 import 'package:test/test.dart';
+import 'package:units_converter/properties/maple_products.dart';
 import 'package:units_converter/units_converter.dart';
 
 void main() {
@@ -17,6 +18,10 @@ void main() {
             FUEL_CONSUMPTION.litersPer100km),
         100);
     expect(1.convertFromTo(LENGTH.feet, LENGTH.meters), 0.3048);
+    expect(
+        1.convertFromTo(MAPLE_PRODUCTS.imperialGallonsSyrup,
+            MAPLE_PRODUCTS.taffyAndOrButterCones),
+        180);
     expect(1.convertFromTo(MASS.kilograms, MASS.grams), 1e3);
     expect(
         1.convertFromTo(MOLAR_MASS.gramsPerMole, MOLAR_MASS.kilogramsPerMole),

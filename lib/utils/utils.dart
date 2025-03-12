@@ -12,6 +12,7 @@ import 'package:units_converter/properties/force.dart';
 import 'package:units_converter/properties/fuel_consumption.dart';
 import 'package:units_converter/properties/illuminance.dart';
 import 'package:units_converter/properties/length.dart';
+import 'package:units_converter/properties/maple_products.dart';
 import 'package:units_converter/properties/mass.dart';
 import 'package:units_converter/properties/molar_mass.dart';
 import 'package:units_converter/properties/molar_volume.dart';
@@ -42,10 +43,12 @@ String baseToDec(String toBeConverted, int base) {
     int unitCode = toBeConverted.codeUnitAt(i);
     if (unitCode >= 65 && unitCode <= 70) {
       // from A to F
-      conversion = conversion + (unitCode - 55) * pow(base, len - i - 1).toInt();
+      conversion =
+          conversion + (unitCode - 55) * pow(base, len - i - 1).toInt();
     } else if (unitCode >= 48 && unitCode <= 57) {
       // from 0 to 9
-      conversion = conversion + (unitCode - 48) * pow(base, len - i - 1).toInt();
+      conversion =
+          conversion + (unitCode - 48) * pow(base, len - i - 1).toInt();
     }
   }
   return conversion.toString();
@@ -117,6 +120,7 @@ Property? getPropertyFromEnum(dynamic propertyEnum) {
     const (TIME) => Time(),
     const (TORQUE) => Torque(),
     const (VOLUME) => Volume(),
+    const (MAPLE_PRODUCTS) => MapleProducts(),
     _ => () {
         assert(false, "${propertyEnum.runtimeType} is not a valid enum type");
         return null;
@@ -180,7 +184,8 @@ String valueToString(
     //remove trailing zeros (just fractional part)
     int firstZeroIndex = decimalPart.length;
     for (; firstZeroIndex > 0; firstZeroIndex--) {
-      String charAtIndex = decimalPart.substring(firstZeroIndex - 1, firstZeroIndex);
+      String charAtIndex =
+          decimalPart.substring(firstZeroIndex - 1, firstZeroIndex);
       if (charAtIndex != '0') break;
     }
     decimalPart = decimalPart.substring(0, firstZeroIndex);
@@ -202,7 +207,8 @@ String valueToString(
     // x.ye+z
     if (decimalPart != null) {
       if (decimalPart.length < exponentialNumber) {
-        decimalPart = decimalPart + ''.padRight(exponentialNumber - decimalPart.length, '0');
+        decimalPart = decimalPart +
+            ''.padRight(exponentialNumber - decimalPart.length, '0');
       }
       integerPart = integerPart + decimalPart.substring(0, exponentialNumber);
       decimalPart = decimalPart.substring(exponentialNumber);
