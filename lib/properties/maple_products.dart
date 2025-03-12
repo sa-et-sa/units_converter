@@ -45,6 +45,7 @@ class MapleProducts extends DoubleProperty<MAPLE_PRODUCTS> {
             MAPLE_PRODUCTS.lbsGranulatedSugar: 'lbs',
             MAPLE_PRODUCTS.kilogramGranulatedSugar: 'kg',
             MAPLE_PRODUCTS.taffyAndOrButterCones: 'cones',
+            MAPLE_PRODUCTS.literSyrup: 'L',
           },
           conversionTree: ConversionNode(
               name: MAPLE_PRODUCTS.imperialGallonsSyrup,
